@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:4
+    volumes:
+      - "./db:/data/db"
+    command: mongod --oplogSize 128 --replSet rs01
+
+  mongo_replica:
+    container_name: mongo_replica
+    image: mongo:4
+    depends_on:
+      - mongo
+    command: >
+      bash -c "for i in `seq 1 30`;
+      do mongo mongo/rocketchat \
+        --eval \"rs.initiate({ _id: 'rs01', members: [{_id: 0, host: 'localhost:27017'} ]})\" \
+        && s=$$? && break || s=$$?;
+      echo \"Tried $$i times. Waiting 5 secs...\";
+      sleep 5; done; (exit $$s)"
+
+  rocketchat:
+    container_name: rocketchat
+    image: rocketchat
+    build:
+      context: ./
+      args:
+        RC_VERSION: 3.2.2
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    volumes:
+      - './uploads:/app/uploads'
+    ports:
+      - '80:3000'
+    environment:
+      ROOT_URL: https://${CHAT_HOSTNAME}
+      MONGO_URL: mongodb://mongo:27017/rocketchat?replSet=rs01
+      MONGO_OPLOG_URL: mongodb://mongo:27017/local?replSet=rs01
+      Accounts_UseDNSDomainCheck: "True"

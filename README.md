@@ -1,9 +1,10 @@
-# A simple, production ready Rocket.Chat docker-compose environment
-Runs on MongoDB v4 and Node.js v12.
+# Production ready Rocket.Chat docker-compose environment
 
-Build and run your own Rocket.Chat system with docker-compose. In production deployments run this with a reverse proxy (Nginx or other) with Certbot. For larger deployments you may want to also add MongoDB replication.
+Creates a Docker multi-stage build of [Rocket.Chat](https://rocket.chat/). Runs on MongoDB v4 and Node.js v12.
 
-You can build the desired version of Rocket.Chat by changing the build config argument `RC_VERSION`.
+Build and run your own Rocket.Chat system with docker-compose. In production setup you will need to run this with a reverse proxy (Nginx or other) and an SSL from Certbot. For larger deployments you may want to add MongoDB replication.
+
+You can build the desired version of Rocket.Chat and upgrade by changing the build config argument `RC_VERSION`.
 
 ### Deploy new Rocket.Chat releases
 `$ docker-compose build && docker-compose down && docker-compose up`
