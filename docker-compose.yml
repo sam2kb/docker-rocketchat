@@ -26,7 +26,7 @@ services:
     build:
       context: ./
       args:
-        RC_VERSION: 3.2.2
+        RC_VERSION: latest
     restart: unless-stopped
     depends_on:
       - mongo

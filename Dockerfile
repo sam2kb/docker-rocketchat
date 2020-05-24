@@ -1,5 +1,5 @@
 FROM node:12-slim AS build
-ARG RC_VERSION=3.2.2
+ARG RC_VERSION=latest
 WORKDIR /app
 
 # Install gpg and import the key 4FD08104
